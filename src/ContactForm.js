@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 
 function ContactForm() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+    phone: ''
+  });
+
   const [submittedData, setSubmittedData] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -15,6 +21,7 @@ function ContactForm() {
     if (!formData.name.trim()) newErrors.name = 'Name is required';
     if (!formData.email.includes('@')) newErrors.email = 'Invalid email';
     if (!formData.message.trim()) newErrors.message = 'Message is required';
+    if (!formData.phone.match(/^[0-9]{10}$/)) newErrors.phone = 'Phone number must be 10 digits';
     return newErrors;
   };
 
@@ -23,7 +30,7 @@ function ContactForm() {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
       setSubmittedData(formData);
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: '', email: '', message: '', phone: '' });
       setErrors({});
     } else {
       setErrors(validationErrors);
@@ -42,6 +49,18 @@ function ContactForm() {
         <label>Email:<br />
           <input type="email" name="email" value={formData.email} onChange={handleChange} />
           {errors.email && <p style={{color: 'red'}}>{errors.email}</p>}
+        </label><br /><br />
+
+        <label>Phone:<br />
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            pattern="[0-9]{10}"
+            placeholder="1234567890"
+          />
+          {errors.phone && <p style={{color: 'red'}}>{errors.phone}</p>}
         </label><br /><br />
 
         <label>Message:<br />
